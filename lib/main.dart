@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:some_food/core/theme.dart';
+import 'package:some_food/feature/presentation/auth/pages/register_page.dart';
 import 'package:some_food/feature/presentation/pages/bottom_bar_page.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: CustomTheme.lightTheme,
-      home: const BottomBarPage(),
+      home: const RegisterPage(),
     );
   }
 }
