@@ -9,9 +9,3 @@ class OrderModel extends OrderEntity {
     required super.status,
   });
 }
-
-  // final DishEntity dish;
-  // final int price;
-  // final int cookingTime;
-  // final int amount;
-  // final OrderStatus status;
