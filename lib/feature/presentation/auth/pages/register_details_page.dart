@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:some_food/feature/presentation/auth/pages/register_details_page.dart';
+import 'package:some_food/core/domain/entity/user.dart';
+import 'package:uuid/uuid.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class RegisterDetailsPage extends StatefulWidget {
+  const RegisterDetailsPage(
+      {super.key, required this.email, required this.password});
+
+  final String email;
+  final String password;
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterDetailsPage> createState() => _RegisterDetailsPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
+  final userNameController = TextEditingController();
+  final addressController = TextEditingController();
+  final uuid = const Uuid();
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +42,9 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 40,
             ),
             TextFormField(
-              controller: emailController,
+              controller: userNameController,
               decoration: const InputDecoration(
-                hintText: 'Почта',
+                hintText: 'Ваше имя',
               ),
               inputFormatters: [
                 FilteringTextInputFormatter.deny(' '),
@@ -48,9 +54,9 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 20,
             ),
             TextFormField(
-              controller: passwordController,
+              controller: addressController,
               decoration: const InputDecoration(
-                hintText: 'Пароль',
+                hintText: 'Адрес доставки',
               ),
               obscureText: true,
               inputFormatters: [FilteringTextInputFormatter.deny(' ')],
@@ -60,13 +66,13 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RegisterDetailsPage(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    ),
-                  ),
+                UserEntity(
+                  id: uuid.v1(),
+                  email: widget.email,
+                  password: widget.password,
+                  name: userNameController.text,
+                  address: addressController.text,
+                  role: Role.customer,
                 );
               },
               style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
@@ -74,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       EdgeInsets.symmetric(vertical: 19),
                     ),
                   ),
-              child: const Text('ДАЛЕЕ'),
+              child: const Text('ЗАРЕГИСТРИРОВАТЬСЯ'),
             ),
           ],
         ),
