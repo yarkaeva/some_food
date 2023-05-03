@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:some_food/feature/presentation/auth/pages/register_details_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -16,12 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
         child: Column(
@@ -38,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
             TextFormField(
               controller: emailController,
               decoration: const InputDecoration(
-                hintText: 'Почта',
+                labelText: 'Почта',
               ),
               inputFormatters: [
                 FilteringTextInputFormatter.deny(' '),
@@ -50,23 +46,23 @@ class _RegisterPageState extends State<RegisterPage> {
             TextFormField(
               controller: passwordController,
               decoration: const InputDecoration(
-                hintText: 'Пароль',
+                labelText: 'Пароль',
               ),
               obscureText: true,
-              inputFormatters: [FilteringTextInputFormatter.deny(' ')],
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(' '),
+              ],
             ),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RegisterDetailsPage(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    ),
-                  ),
+                context.go(
+                  '/register_page/details',
+                  extra: {
+                    emailController.text: passwordController.text,
+                  },
                 );
               },
               style: Theme.of(context).elevatedButtonTheme.style?.copyWith(

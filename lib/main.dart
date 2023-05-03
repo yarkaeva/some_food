@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:some_food/config/app_router.dart';
 import 'package:some_food/core/data/models/user_model.dart';
 import 'package:some_food/core/theme.dart';
-import 'package:some_food/feature/presentation/auth/pages/auth_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +15,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: CustomTheme.lightTheme,
-      home: const AuthPage(),
+      routerConfig: router,
     );
   }
 }

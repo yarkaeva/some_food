@@ -22,12 +22,7 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
         child: Column(
@@ -44,8 +39,8 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
             TextFormField(
               controller: userNameController,
               decoration: const InputDecoration(
-                hintText: 'Ваше имя',
-              ),
+                  labelText: 'Ваше имя',
+                  floatingLabelAlignment: FloatingLabelAlignment.start),
               inputFormatters: [
                 FilteringTextInputFormatter.deny(' '),
               ],
@@ -56,10 +51,8 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
             TextFormField(
               controller: addressController,
               decoration: const InputDecoration(
-                hintText: 'Адрес доставки',
+                labelText: 'Адрес доставки',
               ),
-              obscureText: true,
-              inputFormatters: [FilteringTextInputFormatter.deny(' ')],
             ),
             const SizedBox(
               height: 20,
@@ -71,7 +64,7 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                   email: widget.email,
                   password: widget.password,
                   name: userNameController.text,
-                  address: addressController.text,
+                  address: addressController.text.trim(),
                   role: Role.customer,
                 );
               },
