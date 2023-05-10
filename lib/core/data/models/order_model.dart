@@ -45,6 +45,8 @@ class OrderModel extends OrderEntity {
   final int amount;
   @HiveField(4)
   final OrderStatusModel statusModel;
+  @HiveField(5)
+  final String id;
 
   OrderModel({
     required this.dish,
@@ -52,11 +54,21 @@ class OrderModel extends OrderEntity {
     required this.cookingTime,
     required this.amount,
     required this.statusModel,
+    required this.id,
   }) : super(
           dish: dish,
           price: price,
           cookingTime: cookingTime,
           amount: amount,
           status: statusModel.statusEnum,
+          id: id,
         );
+
+  OrderEntity toEntity() => OrderEntity(
+      dish: dish,
+      price: price,
+      cookingTime: cookingTime,
+      amount: amount,
+      status: statusModel.statusEnum,
+      id: id);
 }

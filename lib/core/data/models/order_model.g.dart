@@ -22,13 +22,14 @@ class OrderModelAdapter extends TypeAdapter<OrderModel> {
       cookingTime: fields[2] as int,
       amount: fields[3] as int,
       statusModel: fields[4] as OrderStatusModel,
+      id: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, OrderModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.dish)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class OrderModelAdapter extends TypeAdapter<OrderModel> {
       ..writeByte(3)
       ..write(obj.amount)
       ..writeByte(4)
-      ..write(obj.statusModel);
+      ..write(obj.statusModel)
+      ..writeByte(5)
+      ..write(obj.id);
   }
 
   @override

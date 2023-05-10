@@ -29,6 +29,7 @@ class OrderEntity {
   final int cookingTime;
   final int amount;
   final OrderStatus status;
+  final String id;
 
   const OrderEntity({
     required this.dish,
@@ -36,6 +37,7 @@ class OrderEntity {
     required this.cookingTime,
     required this.amount,
     required this.status,
+    required this.id,
   });
 
   OrderModel toModel() => OrderModel(
@@ -43,5 +45,6 @@ class OrderEntity {
       price: price,
       cookingTime: cookingTime,
       amount: amount,
-      statusModel: status.statusModel);
+      statusModel: status.statusModel,
+      id: id);
 }
