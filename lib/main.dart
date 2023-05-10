@@ -6,6 +6,7 @@ import 'package:some_food/core/data/models/user_model.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
+import 'package:some_food/feature/presentation/bloc/main_screen_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userRepo = UserRepositoryImpl();
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(
-          create: (context) => AuthCubit(UserRepositoryImpl()),
+          create: (context) => AuthCubit(userRepo),
         ),
+        BlocProvider<MainScreenBloc>(
+            create: (context) => MainScreenBloc(userRepo)),
       ],
       child: MaterialApp.router(
         theme: CustomTheme.lightTheme,
