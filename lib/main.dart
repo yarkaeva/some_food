@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/config/app_router.dart';
 import 'package:some_food/core/data/models/user_model.dart';
+import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
+import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +18,16 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: CustomTheme.lightTheme,
-      routerConfig: router,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(UserRepositoryImpl()),
+        ),
+      ],
+      child: MaterialApp.router(
+        theme: CustomTheme.lightTheme,
+        routerConfig: router,
+      ),
     );
   }
 }
@@ -25,4 +35,5 @@ class App extends StatelessWidget {
 Future<void> hiveInit() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(RoleModelAdapter());
 }
