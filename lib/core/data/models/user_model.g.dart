@@ -22,7 +22,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       password: fields[2] as String,
       name: fields[6] as String,
       address: fields[7] as String,
-      role: fields[3] as Role,
+      roleModel: fields[3] as RoleModel,
       customerList: (fields[4] as List?)?.cast<OrderModel>(),
       perfomerList: (fields[5] as List?)?.cast<OrderModel>(),
     );
@@ -39,7 +39,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(2)
       ..write(obj.password)
       ..writeByte(3)
-      ..write(obj.role)
+      ..write(obj.roleModel)
       ..writeByte(4)
       ..write(obj.customerList)
       ..writeByte(5)
@@ -57,6 +57,45 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UserModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RoleModelAdapter extends TypeAdapter<RoleModel> {
+  @override
+  final int typeId = 1;
+
+  @override
+  RoleModel read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return RoleModel.customer;
+      case 1:
+        return RoleModel.performer;
+      default:
+        return RoleModel.customer;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, RoleModel obj) {
+    switch (obj) {
+      case RoleModel.customer:
+        writer.writeByte(0);
+        break;
+      case RoleModel.performer:
+        writer.writeByte(1);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RoleModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

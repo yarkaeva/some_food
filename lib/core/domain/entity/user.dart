@@ -51,7 +51,8 @@ class UserEntity extends Equatable {
         password: password,
         name: name,
         address: address,
-        role: role,
+        roleModel:
+            role == Role.customer ? RoleModel.customer : RoleModel.performer,
         customerList: customerList?.map((e) => e.toModel()).toList(),
         perfomerList: perfomerList?.map((e) => e.toModel()).toList(),
       );

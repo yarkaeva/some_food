@@ -7,6 +7,14 @@ import 'package:hive_flutter/adapters.dart';
 
 part 'user_model.g.dart';
 
+@HiveType(typeId: 1)
+enum RoleModel {
+  @HiveField(0)
+  customer,
+  @HiveField(1)
+  performer,
+}
+
 @HiveType(typeId: 0)
 class UserModel extends UserEntity {
   @HiveField(0)
@@ -16,7 +24,7 @@ class UserModel extends UserEntity {
   @HiveField(2)
   final String password;
   @HiveField(3)
-  final Role role;
+  final RoleModel roleModel;
   @HiveField(4)
   final List<OrderModel>? customerList;
   @HiveField(5)
@@ -32,14 +40,14 @@ class UserModel extends UserEntity {
     required this.password,
     required this.name,
     required this.address,
-    required this.role,
+    required this.roleModel,
     this.customerList,
     this.perfomerList,
   }) : super(
           id: id,
           email: email,
           password: password,
-          role: role,
+          role: roleModel == RoleModel.customer ? Role.customer : Role.perfomer,
           name: name,
           address: address,
           customerList: customerList,
@@ -69,12 +77,16 @@ class UserModel extends UserEntity {
     List<OrderEntity>? perfomerList,
   }) {
     return UserModel(
-      email: email ?? this.email,
       id: id ?? this.id,
+      email: email ?? this.email,
       name: name ?? this.name,
       address: address ?? this.address,
       password: password ?? this.password,
-      role: role ?? this.role,
+      roleModel: role == null
+          ? roleModel
+          : role == Role.customer
+              ? RoleModel.customer
+              : RoleModel.performer,
     );
   }
 }
