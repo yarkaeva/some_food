@@ -19,7 +19,7 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<UserEntity?> getUser(String email, String password) async {
+  Future<UserEntity?> checkUser(String email, String password) async {
     final storage = await Hive.openBox<UserModel>('users');
     try {
       final logedUser = storage.values
@@ -31,5 +31,20 @@ class UserRepositoryImpl extends UserRepository {
       await storage.close();
       return null;
     }
+  }
+
+  @override
+  Future<bool> checkEmail(String email) async {
+    final storage = await Hive.openBox<UserModel>('users');
+    final isExist = storage.values.any((element) => element.email == email);
+    await storage.close();
+    return isExist;
+  }
+
+  @override
+  Future<UserEntity> getUser(String id) async {
+    final storage = await Hive.openBox<UserModel>('users');
+    final user = storage.values.firstWhere((element) => element.id == id);
+    return user;
   }
 }
