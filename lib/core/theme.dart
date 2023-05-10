@@ -134,5 +134,15 @@ class CustomTheme {
             borderRadius: BorderRadius.circular(10),
             splashColor: Colors.transparent,
             constraints: const BoxConstraints(minWidth: 110, minHeight: 40)),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.red.shade400,
+          elevation: 0,
+          contentTextStyle: const TextStyle(fontSize: 16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(10),
+            ),
+          ),
+        ),
       );
 }
