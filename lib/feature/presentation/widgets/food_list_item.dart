@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
+import 'package:some_food/feature/presentation/widgets/add_order_widget.dart';
 
 class FoodListItem extends StatelessWidget {
   const FoodListItem({super.key, required this.dishItem});
@@ -47,7 +48,12 @@ class FoodListItem extends StatelessWidget {
               icon: const Icon(Icons.favorite_border_outlined),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => AddOrderWidget(dishItem: dishItem),
+                );
+              },
               icon: const Icon(Icons.add_shopping_cart),
             ),
           ],

@@ -8,6 +8,7 @@ import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/bloc/main_screen_bloc.dart';
+import 'package:some_food/feature/presentation/bloc_orders/orders_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class App extends StatelessWidget {
         ),
         BlocProvider<MainScreenBloc>(
             create: (context) => MainScreenBloc(userRepo)),
+        BlocProvider<OrdersBloc>(create: (context) => OrdersBloc(userRepo)),
       ],
       child: MaterialApp.router(
         theme: CustomTheme.lightTheme,
