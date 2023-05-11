@@ -54,13 +54,13 @@ List<DishEntity> popularDishes = [
   DishEntity(
     title: 'Картофельное пюре с котлетами',
     description:
-        'Картофельное пюре с котлетой из говяжего фарша сос вижим луком.',
+        'Картофельное пюре (на молоке) с котлетой из говяжего фарша со свежим луком.',
     url:
         'https://www.photorecept.ru/wp-content/uploads/2021/04/kotlety-s-pjure.jpg',
   ),
   DishEntity(
     title: 'Пельмени со сметаной',
-    description: 'Домашние пельмени из свинного фарша со сметанойю',
+    description: 'Домашние пельмени из свинного фарша со сметаной.',
     url:
         'https://static.1000.menu/img/content-v2/a5/13/42853/pelmeni-domashnie-klassicheskie_1580382950_16_max.jpg',
   ),

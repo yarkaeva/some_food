@@ -120,6 +120,13 @@ class CustomTheme {
           size: 30,
           color: Colors.black87,
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+          ),
+        ),
         toggleButtonsTheme: ToggleButtonsThemeData(
             textStyle: const TextStyle(
               fontFamily: 'Roboto',
