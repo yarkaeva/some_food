@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/order.dart';
-import 'package:some_food/feature/presentation/bloc_orders/orders_bloc.dart';
-import 'package:some_food/feature/presentation/cubit/amount_counter_cubit.dart';
-import 'package:some_food/feature/presentation/cubit/price_counter.dart';
+import 'package:some_food/feature/presentation/blocs/cubits/amount_counter_cubit.dart';
+import 'package:some_food/feature/presentation/blocs/cubits/price_counter.dart';
+import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 class AddOrderWidget extends StatelessWidget {

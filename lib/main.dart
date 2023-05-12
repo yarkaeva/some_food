@@ -8,8 +8,8 @@ import 'package:some_food/core/data/repositories/order_repository.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
-import 'package:some_food/feature/presentation/bloc/main_screen_bloc.dart';
-import 'package:some_food/feature/presentation/bloc_orders/orders_bloc.dart';
+import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
+import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

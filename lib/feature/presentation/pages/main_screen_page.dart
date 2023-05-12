@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:some_food/feature/presentation/bloc/main_screen_bloc.dart';
+import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
 import 'package:some_food/feature/presentation/pages/favorite_page.dart';
 import 'package:some_food/feature/presentation/pages/home_page.dart';
 import 'package:some_food/feature/presentation/pages/cart_page.dart';
