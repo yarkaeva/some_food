@@ -18,9 +18,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
 
   Future<void> _onOrderAdded(OrderAdded event, Emitter<OrderState> emit) async {
     try {
-      emit(OrdersLoading());
       await _repository.placeOrder(event.order);
-      _ordersListUpdated(emit);
+      await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
     }
@@ -31,7 +30,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
     try {
       emit(OrdersLoading());
       await _repository.deleteOrder(event.id);
-      _ordersListUpdated(emit);
+      await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
     }
@@ -42,7 +41,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
     try {
       emit(OrdersLoading());
       //TODO: implement updating an order status.
-      _ordersListUpdated(emit);
+      await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
     }

@@ -58,7 +58,7 @@ class CartPage extends StatelessWidget {
 }
 
 class _OrdersView extends StatelessWidget {
-  const _OrdersView({super.key});
+  const _OrdersView();
 
   @override
   Widget build(BuildContext context) {

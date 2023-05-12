@@ -1,68 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
+import 'package:some_food/core/domain/entity/order.dart';
+import 'package:some_food/feature/presentation/bloc_orders/orders_bloc.dart';
 import 'package:some_food/feature/presentation/cubit/amount_counter_cubit.dart';
 import 'package:some_food/feature/presentation/cubit/price_counter.dart';
+import 'package:uuid/uuid.dart';
 
 class AddOrderWidget extends StatelessWidget {
   const AddOrderWidget({super.key, required this.dishItem});
   final DishEntity dishItem;
+  final uuid = const Uuid();
 
   @override
   Widget build(BuildContext context) {
     const divider = SizedBox(height: 30);
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 40,
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 80,
-            backgroundColor: Colors.grey.shade100,
-            backgroundImage: NetworkImage(dishItem.url),
-          ),
-          divider,
-          Text(
-            dishItem.title,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            dishItem.description,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          divider,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AmountCounterCubit(),
+        ),
+        BlocProvider(
+          create: (context) => PriceCounterCubit(),
+        ),
+      ],
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 40,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Builder(builder: (context) {
+          return Column(
             children: [
-              BlocProvider(
-                create: (context) => AmountCounterCubit(),
-                child: const _AmountPicker(),
+              CircleAvatar(
+                radius: 80,
+                backgroundColor: Colors.grey.shade100,
+                backgroundImage: NetworkImage(dishItem.url),
               ),
-              BlocProvider(
-                create: (context) => PriceCounterCubit(),
-                child: const _PricePicker(),
+              divider,
+              Text(
+                dishItem.title,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Text(
+                dishItem.description,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              divider,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  _AmountPicker(),
+                  _PricePicker(),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<OrdersBloc>().add(
+                        OrderAdded(
+                          order: OrderEntity(
+                            dish: dishItem,
+                            price: context.read<PriceCounterCubit>().state,
+                            cookingTime: 30,
+                            amount: context.read<AmountCounterCubit>().state,
+                            status: OrderStatus.placed,
+                            id: uuid.v1(),
+                          ),
+                        ),
+                      );
+                  Navigator.pop(context);
+                },
+                child: const Text('ДОБАВИТЬ ЗАКАЗ'),
               ),
             ],
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('ДОБАВИТЬ ЗАКАЗ'),
-          ),
-        ],
+          );
+        }),
       ),
     );
   }
 }
 
 class _AmountPicker extends StatelessWidget {
-  const _AmountPicker({
-    super.key,
-  });
+  const _AmountPicker();
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +123,7 @@ class _AmountPicker extends StatelessWidget {
 }
 
 class _PricePicker extends StatelessWidget {
-  const _PricePicker({
-    super.key,
-  });
+  const _PricePicker();
 
   @override
   Widget build(BuildContext context) {

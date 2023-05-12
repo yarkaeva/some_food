@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/config/app_router.dart';
 import 'package:some_food/core/data/models/order_model.dart';
 import 'package:some_food/core/data/models/user_model.dart';
+import 'package:some_food/core/data/repositories/order_repository.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
@@ -25,11 +26,20 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(
-          create: (context) => AuthCubit(userRepo),
+          create: (context) => AuthCubit(
+            userRepo,
+          ),
         ),
         BlocProvider<MainScreenBloc>(
-            create: (context) => MainScreenBloc(userRepo)),
-        BlocProvider<OrdersBloc>(create: (context) => OrdersBloc(userRepo)),
+          create: (context) => MainScreenBloc(
+            userRepo,
+          ),
+        ),
+        BlocProvider<OrdersBloc>(
+          create: (context) => OrdersBloc(
+            OrderRepositoryImpl(),
+          ),
+        ),
       ],
       child: MaterialApp.router(
         theme: CustomTheme.lightTheme,
