@@ -37,7 +37,8 @@ class App extends StatelessWidget {
         ),
         BlocProvider<OrdersBloc>(
           create: (context) => OrdersBloc(
-            OrderRepositoryImpl(),
+            ordersRepo: OrderRepositoryImpl(),
+            userRepo: userRepo,
           ),
         ),
       ],
