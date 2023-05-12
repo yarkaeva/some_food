@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:some_food/core/data/models/user_model.dart';
+import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/order.dart';
 
 enum Role { customer, perfomer }
@@ -13,35 +14,39 @@ class UserEntity extends Equatable {
   final Role role;
   final List<OrderEntity>? customerList;
   final List<OrderEntity>? perfomerList;
+  final List<DishEntity>? favoriteList;
 
-  const UserEntity({
-    required this.id,
-    required this.email,
-    required this.password,
-    required this.name,
-    required this.address,
-    required this.role,
-    this.customerList,
-    this.perfomerList,
-  });
+  const UserEntity(
+      {required this.id,
+      required this.email,
+      required this.password,
+      required this.name,
+      required this.address,
+      required this.role,
+      this.customerList,
+      this.perfomerList,
+      this.favoriteList});
 
   UserEntity copyWith({
     String? email,
-    String? id,
     String? password,
     String? name,
     String? address,
     Role? role,
     List<OrderEntity>? customerList,
     List<OrderEntity>? perfomerList,
+    List<DishEntity>? favoriteList,
   }) {
     return UserEntity(
-      id: id ?? this.id,
+      id: id,
       email: email ?? this.email,
       name: name ?? this.name,
       address: address ?? this.address,
       password: password ?? this.password,
       role: role ?? this.role,
+      customerList: customerList ?? this.customerList,
+      perfomerList: perfomerList ?? this.perfomerList,
+      favoriteList: favoriteList ?? this.favoriteList,
     );
   }
 
@@ -55,9 +60,10 @@ class UserEntity extends Equatable {
             role == Role.customer ? RoleModel.customer : RoleModel.performer,
         customerList: customerList?.map((e) => e.toModel()).toList(),
         perfomerList: perfomerList?.map((e) => e.toModel()).toList(),
+        favoriteList: favoriteList?.map((e) => e.toModel()).toList(),
       );
 
   @override
   List<Object?> get props =>
-      [email, id, password, role, customerList, perfomerList];
+      [email, id, password, role, customerList, perfomerList, favoriteList];
 }

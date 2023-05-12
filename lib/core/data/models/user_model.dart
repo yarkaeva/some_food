@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
+import 'package:some_food/core/data/models/dish_model.dart';
 import 'package:some_food/core/data/models/order_model.dart';
-import 'package:some_food/core/domain/entity/order.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -33,17 +33,20 @@ class UserModel extends UserEntity {
   final String name;
   @HiveField(7)
   final String address;
+  @HiveField(8)
+  final List<DishModel>? favoriteList;
 
-  const UserModel({
-    required this.id,
-    required this.email,
-    required this.password,
-    required this.name,
-    required this.address,
-    required this.roleModel,
-    this.customerList,
-    this.perfomerList,
-  }) : super(
+  const UserModel(
+      {required this.id,
+      required this.email,
+      required this.password,
+      required this.name,
+      required this.address,
+      required this.roleModel,
+      this.customerList,
+      this.perfomerList,
+      this.favoriteList})
+      : super(
           id: id,
           email: email,
           password: password,
@@ -52,6 +55,7 @@ class UserModel extends UserEntity {
           address: address,
           customerList: customerList,
           perfomerList: perfomerList,
+          favoriteList: favoriteList,
         );
 
   UserEntity toEntity() => UserEntity(
@@ -60,33 +64,32 @@ class UserModel extends UserEntity {
         password: password,
         name: name,
         address: address,
-        role: role,
+        role: roleModel == RoleModel.customer ? Role.customer : Role.perfomer,
         customerList: customerList,
         perfomerList: perfomerList,
+        favoriteList: favoriteList,
       );
 
-  @override
-  UserModel copyWith({
-    String? id,
+  UserModel copyWithM({
     String? email,
     String? password,
     String? name,
     String? address,
-    Role? role,
-    List<OrderEntity>? customerList,
-    List<OrderEntity>? perfomerList,
+    RoleModel? roleModel,
+    List<OrderModel>? customerList,
+    List<OrderModel>? perfomerList,
+    List<DishModel>? favoriteList,
   }) {
     return UserModel(
-      id: id ?? this.id,
+      id: id,
       email: email ?? this.email,
       name: name ?? this.name,
       address: address ?? this.address,
       password: password ?? this.password,
-      roleModel: role == null
-          ? roleModel
-          : role == Role.customer
-              ? RoleModel.customer
-              : RoleModel.performer,
+      favoriteList: favoriteList ?? this.favoriteList,
+      customerList: customerList ?? this.customerList,
+      perfomerList: perfomerList ?? this.perfomerList,
+      roleModel: roleModel ?? this.roleModel,
     );
   }
 }
