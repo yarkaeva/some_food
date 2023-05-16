@@ -23,15 +23,16 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       name: fields[6] as String,
       address: fields[7] as String,
       roleModel: fields[3] as RoleModel,
-      customerList: (fields[4] as List?)?.cast<OrderModel>(),
-      perfomerList: (fields[5] as List?)?.cast<OrderModel>(),
+      customerList: (fields[4] as List).cast<OrderModel>(),
+      perfomerList: (fields[5] as List).cast<OrderModel>(),
+      favoriteList: (fields[8] as List).cast<DishModel>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.email)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(6)
       ..write(obj.name)
       ..writeByte(7)
-      ..write(obj.address);
+      ..write(obj.address)
+      ..writeByte(8)
+      ..write(obj.favoriteList);
   }
 
   @override

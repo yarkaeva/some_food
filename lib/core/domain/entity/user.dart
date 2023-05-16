@@ -12,20 +12,21 @@ class UserEntity extends Equatable {
   final String name;
   final String address;
   final Role role;
-  final List<OrderEntity>? customerList;
-  final List<OrderEntity>? perfomerList;
-  final List<DishEntity>? favoriteList;
+  final List<OrderEntity> customerList;
+  final List<OrderEntity> perfomerList;
+  final List<DishEntity> favoriteList;
 
-  const UserEntity(
-      {required this.id,
-      required this.email,
-      required this.password,
-      required this.name,
-      required this.address,
-      required this.role,
-      this.customerList,
-      this.perfomerList,
-      this.favoriteList});
+  const UserEntity({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.address,
+    required this.role,
+    this.customerList = const [],
+    this.perfomerList = const [],
+    this.favoriteList = const [],
+  });
 
   UserEntity copyWith({
     String? email,
@@ -58,9 +59,9 @@ class UserEntity extends Equatable {
         address: address,
         roleModel:
             role == Role.customer ? RoleModel.customer : RoleModel.performer,
-        customerList: customerList?.map((e) => e.toModel()).toList(),
-        perfomerList: perfomerList?.map((e) => e.toModel()).toList(),
-        favoriteList: favoriteList?.map((e) => e.toModel()).toList(),
+        customerList: customerList.map((e) => e.toModel()).toList(),
+        perfomerList: perfomerList.map((e) => e.toModel()).toList(),
+        favoriteList: favoriteList.map((e) => e.toModel()).toList(),
       );
 
   @override

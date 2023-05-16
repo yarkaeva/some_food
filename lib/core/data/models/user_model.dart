@@ -26,27 +26,27 @@ class UserModel extends UserEntity {
   @HiveField(3)
   final RoleModel roleModel;
   @HiveField(4)
-  final List<OrderModel>? customerList;
+  final List<OrderModel> customerList;
   @HiveField(5)
-  final List<OrderModel>? perfomerList;
+  final List<OrderModel> perfomerList;
   @HiveField(6)
   final String name;
   @HiveField(7)
   final String address;
   @HiveField(8)
-  final List<DishModel>? favoriteList;
+  final List<DishModel> favoriteList;
 
-  const UserModel(
-      {required this.id,
-      required this.email,
-      required this.password,
-      required this.name,
-      required this.address,
-      required this.roleModel,
-      this.customerList,
-      this.perfomerList,
-      this.favoriteList})
-      : super(
+  const UserModel({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.address,
+    required this.roleModel,
+    this.customerList = const [],
+    this.perfomerList = const [],
+    this.favoriteList = const [],
+  }) : super(
           id: id,
           email: email,
           password: password,
