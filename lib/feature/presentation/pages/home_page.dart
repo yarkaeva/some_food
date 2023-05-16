@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/user.dart';
-import 'package:some_food/feature/presentation/widgets/popular_food_list.dart';
+import 'package:some_food/feature/presentation/widgets/food_list.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.user});
+  const HomePage({
+    super.key,
+    required this.user,
+    required this.list,
+  });
   final UserEntity user;
+  final List<DishEntity> list;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,10 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const PopularFoodList(),
+      body: FoodList(
+        list: list,
+        userId: user.id,
+      ),
     );
   }
 }

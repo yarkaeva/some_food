@@ -24,7 +24,7 @@ class CartPage extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        itemCount: user.customerList?.length ?? 0,
+        itemCount: user.customerList.length,
         itemBuilder: (context, index) {
           if (index == 0) {
             return Column(
