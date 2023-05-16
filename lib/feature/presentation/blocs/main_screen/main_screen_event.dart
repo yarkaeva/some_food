@@ -16,6 +16,22 @@ class FavoritePressed extends MainScreenEvent {
   const FavoritePressed({required super.id});
 }
 
+class FavoriteStatusToggledOnHome extends MainScreenEvent {
+  const FavoriteStatusToggledOnHome({
+    required super.id,
+    required this.dishItem,
+  });
+  final DishEntity dishItem;
+}
+
+class FavoriteStatusToggledOnFavorite extends MainScreenEvent {
+  const FavoriteStatusToggledOnFavorite({
+    required super.id,
+    required this.dishItem,
+  });
+  final DishEntity dishItem;
+}
+
 class CartPressed extends MainScreenEvent {
   const CartPressed({required super.id});
 }
