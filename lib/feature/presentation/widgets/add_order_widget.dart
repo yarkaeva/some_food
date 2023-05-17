@@ -8,8 +8,10 @@ import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 class AddOrderWidget extends StatelessWidget {
-  const AddOrderWidget({super.key, required this.dishItem});
+  const AddOrderWidget(
+      {super.key, required this.dishItem, required this.userId});
   final DishEntity dishItem;
+  final String userId;
   final uuid = const Uuid();
 
   @override
@@ -61,6 +63,7 @@ class AddOrderWidget extends StatelessWidget {
                 onPressed: () {
                   context.read<OrdersBloc>().add(
                         OrderAdded(
+                          userId: userId,
                           order: OrderEntity(
                             dish: dishItem,
                             price: context.read<PriceCounterCubit>().state,
