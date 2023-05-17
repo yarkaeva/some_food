@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
+import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 import 'package:some_food/feature/presentation/pages/favorite_page.dart';
 import 'package:some_food/feature/presentation/pages/home_page.dart';
 import 'package:some_food/feature/presentation/pages/cart_page.dart';
@@ -18,7 +19,8 @@ class _MainScreenPage extends State<MainScreenPage> {
   int _currentIndex = 0;
 
   void _onNavigationTap(int index) {
-    final bloc = context.read<MainScreenBloc>();
+    final mainScreenBloc = context.read<MainScreenBloc>();
+    final ordersBloc = context.read<OrdersBloc>();
 
     if (_currentIndex == index) return;
     setState(() {
@@ -27,22 +29,23 @@ class _MainScreenPage extends State<MainScreenPage> {
 
     switch (_currentIndex = index) {
       case 0:
-        bloc.add(
+        mainScreenBloc.add(
           HomePressed(id: widget.id),
         );
         break;
       case 1:
-        bloc.add(
+        mainScreenBloc.add(
           FavoritePressed(id: widget.id),
         );
         break;
       case 2:
-        bloc.add(
+        mainScreenBloc.add(
           CartPressed(id: widget.id),
         );
+        ordersBloc.add(FirstLoad());
         break;
       case 3:
-        bloc.add(
+        mainScreenBloc.add(
           ProfilePressed(id: widget.id),
         );
         break;

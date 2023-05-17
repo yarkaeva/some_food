@@ -73,7 +73,8 @@ class FoodListItem extends StatelessWidget {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (context) => AddOrderWidget(dishItem: dishItem),
+                  builder: (context) =>
+                      AddOrderWidget(userId: userId, dishItem: dishItem),
                 );
               },
               icon: const Icon(Icons.add_shopping_cart),

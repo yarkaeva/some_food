@@ -1,4 +1,5 @@
 import 'package:some_food/core/domain/entity/dish.dart';
+import 'package:some_food/core/domain/entity/order.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 
 abstract class UserRepository {
@@ -20,6 +21,9 @@ abstract class UserRepository {
   ///Toggle isFavorite for items in list of User favorite dishes.
   Future<UserEntity> toggleFavorite(String userId, DishEntity dishItem);
 
-  ///Updating list of Customer orders (customerList).
-  Future<void> updateUserOrders();
+  ///Adding item to customer list.
+  Future<void> addOrderToCustomerList(String userId, OrderEntity order);
+
+  ///Delete item to customer list.
+  Future<void> deleteOrderFromCustomerList(String userId, String orderId);
 }
