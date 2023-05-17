@@ -39,3 +39,7 @@ class CartPressed extends MainScreenEvent {
 class ProfilePressed extends MainScreenEvent {
   const ProfilePressed({required super.id});
 }
+
+class DeleteProfilePressed extends MainScreenEvent {
+  const DeleteProfilePressed({required super.id});
+}

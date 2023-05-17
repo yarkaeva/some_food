@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/core/domain/repositories/dish_repository.dart';
+import 'package:some_food/core/domain/repositories/order_repository.dart';
 import 'package:some_food/core/domain/repositories/user_repository.dart';
 
 part 'main_screen_event.dart';
@@ -13,9 +14,11 @@ part 'main_screen_state.dart';
 class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   MainScreenBloc(
       {required UserRepository userRepository,
-      required DishRepository dishRepository})
+      required DishRepository dishRepository,
+      required OrderRepository ordersRepository})
       : _userRepository = userRepository,
         _dishRepository = dishRepository,
+        _ordersRepository = ordersRepository,
         super(MainScreenInitial()) {
     on<HomePressed>(_onHomePressed);
     on<FavoritePressed>(_onFavoritePressed);
@@ -23,9 +26,11 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
     on<ProfilePressed>(_onProfilePressed);
     on<FavoriteStatusToggledOnHome>(_onStatusTooggledHomePage);
     on<FavoriteStatusToggledOnFavorite>(_onStatusTooggledFavoritePage);
+    on<DeleteProfilePressed>(_onDeleteProfilePressed);
   }
   final UserRepository _userRepository;
   final DishRepository _dishRepository;
+  final OrderRepository _ordersRepository;
 
   Future<void> _onHomePressed(
     HomePressed event,
@@ -94,5 +99,13 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
     emit(FavoriteSelected(
       user: user,
     ));
+  }
+
+  Future<void> _onDeleteProfilePressed(
+    DeleteProfilePressed event,
+    Emitter<MainScreenState> emit,
+  ) async {
+    emit(Loadig());
+    await _userRepository.deleteUser(event.id);
   }
 }

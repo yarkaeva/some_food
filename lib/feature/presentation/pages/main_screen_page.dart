@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
 import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 import 'package:some_food/feature/presentation/pages/favorite_page.dart';
@@ -70,29 +72,36 @@ class _MainScreenPage extends State<MainScreenPage> {
         ],
         onTap: _onNavigationTap,
       ),
-      body: BlocBuilder<MainScreenBloc, MainScreenState>(
-        builder: (context, state) {
-          if (state is HomeSelected) {
-            return HomePage(
-              user: state.user,
-              list: state.list,
-            );
-          } else if (state is FavoriteSelected) {
-            return FavoritePage(user: state.user);
-          } else if (state is CartSelected) {
-            return CartPage(user: state.user);
-          } else if (state is ProfileSelected) {
-            return ProfilePage(user: state.user);
-          } else if (state is Loadig) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          } else {
-            return const Center(
-              child: Text('что-то не работает'),
-            );
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is LogedOut) {
+            context.go('/');
           }
         },
+        child: BlocBuilder<MainScreenBloc, MainScreenState>(
+          builder: (context, state) {
+            if (state is HomeSelected) {
+              return HomePage(
+                user: state.user,
+                list: state.list,
+              );
+            } else if (state is FavoriteSelected) {
+              return FavoritePage(user: state.user);
+            } else if (state is CartSelected) {
+              return CartPage(user: state.user);
+            } else if (state is ProfileSelected) {
+              return ProfilePage(user: state.user);
+            } else if (state is Loadig) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            } else {
+              return const Center(
+                child: Text('что-то не работает'),
+              );
+            }
+          },
+        ),
       ),
     );
   }
