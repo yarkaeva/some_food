@@ -7,8 +7,17 @@ environment:
   sdk: '>=2.19.5 <3.0.0'
 
 dependencies:
+  bloc: ^8.1.0
+  equatable: ^2.0.0
+  google_fonts: ^4.0.4
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  surf_lint_rules: ^2.0.0
+  
+  
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/background_image.png
+    - assets/images/salad_greece.jpg
