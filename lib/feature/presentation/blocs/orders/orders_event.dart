@@ -7,14 +7,21 @@ abstract class OrdersEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FirstLoad extends OrdersEvent {}
+
 class OrderAdded extends OrdersEvent {
+  final String userId;
   final OrderEntity order;
-  const OrderAdded({required this.order});
+  const OrderAdded({required this.order, required this.userId});
 }
 
 class OrderDeleted extends OrdersEvent {
-  final String id;
-  const OrderDeleted({required this.id});
+  final String userId;
+  final String orderId;
+  const OrderDeleted({
+    required this.userId,
+    required this.orderId,
+  });
 }
 
 class OrderSatusUpdated extends OrdersEvent {}

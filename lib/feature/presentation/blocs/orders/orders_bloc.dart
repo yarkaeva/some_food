@@ -14,6 +14,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
   })  : _ordersRepository = ordersRepo,
         _userRepository = userRepo,
         super(OrderInitial()) {
+    on<FirstLoad>(_onFirstLoad);
     on<OrderAdded>(_onOrderAdded);
     on<OrderDeleted>(_onOrderDeleted);
     on<OrderSatusUpdated>(_onOrderUpdated);
@@ -21,10 +22,26 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
   final OrderRepository _ordersRepository;
   final UserRepository _userRepository;
 
-  Future<void> _onOrderAdded(OrderAdded event, Emitter<OrderState> emit) async {
+  Future<void> _onFirstLoad(
+    FirstLoad event,
+    Emitter<OrderState> emit,
+  ) async {
     try {
+      emit(OrdersLoading());
+      await _ordersListUpdated(emit);
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+
+  Future<void> _onOrderAdded(
+    OrderAdded event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      emit(OrdersLoading());
       await _ordersRepository.placeOrder(event.order);
-      //TODO: implement adding an item to User list of orders.
+      await _userRepository.addOrderToCustomerList(event.userId, event.order);
       await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
@@ -32,10 +49,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
   }
 
   Future<void> _onOrderDeleted(
-      OrderDeleted event, Emitter<OrderState> emit) async {
+    OrderDeleted event,
+    Emitter<OrderState> emit,
+  ) async {
     try {
-      emit(OrdersLoading());
-      await _ordersRepository.deleteOrder(event.id);
+      await _userRepository.deleteOrderFromCustomerList(
+          event.userId, event.orderId);
+      await _ordersRepository.deleteOrder(event.orderId);
       await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
@@ -43,7 +63,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
   }
 
   Future<void> _onOrderUpdated(
-      OrderSatusUpdated event, Emitter<OrderState> emit) async {
+    OrderSatusUpdated event,
+    Emitter<OrderState> emit,
+  ) async {
     try {
       emit(OrdersLoading());
       //TODO: implement updating an order status.
