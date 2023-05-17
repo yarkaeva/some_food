@@ -70,7 +70,10 @@ class _MainScreenPage extends State<MainScreenPage> {
       body: BlocBuilder<MainScreenBloc, MainScreenState>(
         builder: (context, state) {
           if (state is HomeSelected) {
-            return HomePage(user: state.user);
+            return HomePage(
+              user: state.user,
+              list: state.list,
+            );
           } else if (state is FavoriteSelected) {
             return FavoritePage(user: state.user);
           } else if (state is CartSelected) {

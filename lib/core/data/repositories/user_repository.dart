@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/core/data/models/user_model.dart';
+import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/core/domain/repositories/user_repository.dart';
 
@@ -12,9 +13,9 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<void> deleteUser(String id) async {
+  Future<void> deleteUser(String userId) async {
     final storage = await Hive.openBox<UserModel>('users');
-    await storage.delete(id);
+    await storage.delete(userId);
     await storage.close();
   }
 
@@ -42,9 +43,10 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<UserEntity> getUser(String id) async {
+  Future<UserEntity> getUser(String userId) async {
     final storage = await Hive.openBox<UserModel>('users');
-    final user = storage.values.firstWhere((element) => element.id == id);
+    final user = storage.values.firstWhere((element) => element.id == userId);
+    await storage.close();
     return user;
   }
 
@@ -52,5 +54,25 @@ class UserRepositoryImpl extends UserRepository {
   Future<void> updateUserOrders() {
     // TODO: implement updateUserOrders
     throw UnimplementedError();
+  }
+
+  @override
+  Future<UserEntity> toggleFavorite(String userId, DishEntity dishItem) async {
+    final storage = await Hive.openBox<UserModel>('users');
+    final user = storage.values.firstWhere((user) => user.id == userId);
+    final favoriteList = user.favoriteList;
+    final isExist = favoriteList.any((element) => element.id == dishItem.id);
+    final dishModel =
+        dishItem.copyWith(isFavorite: !dishItem.isFavorite).toModel();
+
+    if (isExist) {
+      favoriteList.removeWhere((element) => element.id == dishItem.id);
+    } else {
+      favoriteList.add(dishModel);
+    }
+    final uptadedUser = user.copyWithM(favoriteList: favoriteList);
+    await storage.put(userId, uptadedUser);
+    await storage.close();
+    return uptadedUser;
   }
 }

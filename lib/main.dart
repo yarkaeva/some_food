@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/config/app_router.dart';
+import 'package:some_food/core/data/models/dish_model.dart';
 import 'package:some_food/core/data/models/order_model.dart';
 import 'package:some_food/core/data/models/user_model.dart';
+import 'package:some_food/core/data/repositories/dish_repository.dart';
 import 'package:some_food/core/data/repositories/order_repository.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/core/theme.dart';
@@ -32,7 +34,8 @@ class App extends StatelessWidget {
         ),
         BlocProvider<MainScreenBloc>(
           create: (context) => MainScreenBloc(
-            userRepo,
+            userRepository: userRepo,
+            dishRepository: DishRepositoryImpl(),
           ),
         ),
         BlocProvider<OrdersBloc>(
@@ -56,4 +59,5 @@ Future<void> hiveInit() async {
   Hive.registerAdapter(RoleModelAdapter());
   Hive.registerAdapter(OrderModelAdapter());
   Hive.registerAdapter(OrderStatusModelAdapter());
+  Hive.registerAdapter(DishModelAdapter());
 }

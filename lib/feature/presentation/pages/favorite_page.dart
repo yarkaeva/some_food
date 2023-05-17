@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:some_food/core/domain/entity/user.dart';
+import 'package:some_food/feature/presentation/widgets/food_list.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key, required this.user});
@@ -22,17 +23,9 @@ class FavoritePage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return const Text('data');
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(
-            height: 10,
-          );
-        },
+      body: FoodList(
+        list: user.favoriteList,
+        userId: user.id,
       ),
     );
   }

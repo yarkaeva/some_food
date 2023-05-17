@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
+import 'package:some_food/core/theme.dart';
+import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
 import 'package:some_food/feature/presentation/widgets/add_order_widget.dart';
 
 class FoodListItem extends StatelessWidget {
-  const FoodListItem({super.key, required this.dishItem});
+  const FoodListItem({super.key, required this.dishItem, required this.userId});
   final DishEntity dishItem;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +48,26 @@ class FoodListItem extends StatelessWidget {
         Column(
           children: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.favorite_border_outlined),
+              onPressed: () {
+                final bloc = context.read<MainScreenBloc>();
+                if (bloc.state is HomeSelected) {
+                  bloc.add(FavoriteStatusToggledOnHome(
+                    id: userId,
+                    dishItem: dishItem,
+                  ));
+                } else if (bloc.state is FavoriteSelected) {
+                  bloc.add(FavoriteStatusToggledOnFavorite(
+                    id: userId,
+                    dishItem: dishItem,
+                  ));
+                }
+              },
+              icon: dishItem.isFavorite
+                  ? Icon(
+                      Icons.favorite,
+                      color: mainGreen,
+                    )
+                  : const Icon(Icons.favorite_border_outlined),
             ),
             IconButton(
               onPressed: () {
