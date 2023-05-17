@@ -20,9 +20,9 @@ class OrderRepositoryImpl extends OrderRepository {
   }
 
   @override
-  Future<void> deleteOrder(String id) async {
+  Future<void> deleteOrder(String orderId) async {
     final storage = await Hive.openBox<OrderModel>('orders');
-    await storage.delete(id);
+    await storage.delete(orderId);
     await storage.close();
   }
 
