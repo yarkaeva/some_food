@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -8,16 +9,20 @@ class AuthPage extends StatelessWidget {
     return Stack(alignment: AlignmentDirectional.center, children: [
       Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage('assets/images/background_image.png'))),
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/images/background_image.png'),
+          ),
+        ),
       ),
       Positioned(
         bottom: 70,
         child: Row(
           children: [
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                context.go('/login_page');
+              },
               style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
                     minimumSize: const MaterialStatePropertyAll(
                       Size(185, 52),
@@ -29,7 +34,9 @@ class AuthPage extends StatelessWidget {
               width: 10,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                context.go('/register_page');
+              },
               style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
                     minimumSize: const MaterialStatePropertyAll(
                       Size(185, 52),
