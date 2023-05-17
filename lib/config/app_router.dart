@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:some_food/feature/presentation/auth/pages/auth_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/login_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/register_page.dart';
+import 'package:some_food/feature/presentation/pages/main_screen_page.dart';
 
 final GoRouter router = GoRouter(
   routes: <GoRoute>[
@@ -18,6 +19,15 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const RegisterPage(),
         ),
       ],
+    ),
+    GoRoute(
+      path: '/main_screen',
+      builder: (context, state) {
+        final id = state.extra as String;
+        return MainScreenPage(
+          id: id,
+        );
+      },
     ),
   ],
 );

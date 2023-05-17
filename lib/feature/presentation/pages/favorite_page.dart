@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:some_food/feature/presentation/widgets/food_list_item.dart';
+import 'package:some_food/core/domain/entity/user.dart';
 
 class FavoritePage extends StatelessWidget {
-  const FavoritePage({super.key});
+  const FavoritePage({super.key, required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class FavoritePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         itemCount: 2,
         itemBuilder: (context, index) {
-          return const FoodListItem();
+          return const Text('data');
         },
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:some_food/core/domain/entity/user.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+  const CartPage({super.key, required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class CartPage extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        itemCount: 15,
+        itemCount: user.customerList?.length ?? 0,
         itemBuilder: (context, index) {
           if (index == 0) {
             return Column(
@@ -38,11 +40,11 @@ class CartPage extends StatelessWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                const OrdersView(),
+                const _OrdersView(),
               ],
             );
           } else {
-            return const OrdersView();
+            return const _OrdersView();
           }
         },
         separatorBuilder: (BuildContext context, int index) {
@@ -55,8 +57,8 @@ class CartPage extends StatelessWidget {
   }
 }
 
-class OrdersView extends StatelessWidget {
-  const OrdersView({super.key});
+class _OrdersView extends StatelessWidget {
+  const _OrdersView();
 
   @override
   Widget build(BuildContext context) {

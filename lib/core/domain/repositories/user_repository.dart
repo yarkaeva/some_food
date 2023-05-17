@@ -15,4 +15,7 @@ abstract class UserRepository {
 
   ///Deleting user from DB.
   Future<void> deleteUser(String id);
+
+  ///Updating list of Customer orders (customerList);
+  Future<void> updateUserOrders();
 }

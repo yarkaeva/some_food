@@ -47,4 +47,10 @@ class UserRepositoryImpl extends UserRepository {
     final user = storage.values.firstWhere((element) => element.id == id);
     return user;
   }
+
+  @override
+  Future<void> updateUserOrders() {
+    // TODO: implement updateUserOrders
+    throw UnimplementedError();
+  }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:some_food/core/domain/entity/user.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -12,42 +14,33 @@ class ProfilePage extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
-      body: const ProfileView(),
-    );
-  }
-}
-
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
-          _UserRoleWidget(),
-          SizedBox(
-            height: 20,
-          ),
-          _InfoWidget(),
-          SizedBox(
-            height: 20,
-          ),
-          _ActionButtonsWidget(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _UserRoleWidget(user: user),
+            const SizedBox(
+              height: 20,
+            ),
+            _InfoWidget(user: user),
+            const SizedBox(
+              height: 20,
+            ),
+            _ActionButtonsWidget(user: user),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _UserRoleWidget extends StatelessWidget {
-  const _UserRoleWidget({super.key});
+  const _UserRoleWidget({required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = [false, true];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -56,7 +49,7 @@ class _UserRoleWidget extends StatelessWidget {
           backgroundColor: Colors.grey,
         ),
         Text(
-          'Дарина',
+          user.name,
           style: Theme.of(context).textTheme.bodyMedium,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
@@ -65,7 +58,8 @@ class _UserRoleWidget extends StatelessWidget {
           height: 20,
         ),
         ToggleButtons(
-          isSelected: isSelected,
+          isSelected:
+              user.role == Role.customer ? [true, false] : [false, true],
           onPressed: (index) {},
           children: const [
             Text('ЗАКАЗЫВАЮ'),
@@ -80,7 +74,8 @@ class _UserRoleWidget extends StatelessWidget {
 }
 
 class _InfoWidget extends StatelessWidget {
-  const _InfoWidget();
+  const _InfoWidget({required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +87,7 @@ class _InfoWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         Text(
-          'ул. Герцена 44',
+          user.address,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(
@@ -103,7 +98,7 @@ class _InfoWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         Text(
-          'darina@example.com',
+          user.email,
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -112,7 +107,8 @@ class _InfoWidget extends StatelessWidget {
 }
 
 class _ActionButtonsWidget extends StatelessWidget {
-  const _ActionButtonsWidget({super.key});
+  const _ActionButtonsWidget({required this.user});
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
