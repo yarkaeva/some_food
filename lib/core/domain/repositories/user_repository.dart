@@ -18,6 +18,9 @@ abstract class UserRepository {
   ///Deleting user from DB.
   Future<void> deleteUser(String userId);
 
+  ///Update user role from DB.
+  Future<UserEntity> toogleUserRole(String userId);
+
   ///Toggle isFavorite for items in list of User favorite dishes.
   Future<UserEntity> toggleFavorite(String userId, DishEntity dishItem);
 

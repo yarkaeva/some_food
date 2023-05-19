@@ -21,6 +21,21 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
+  Future<UserEntity> toogleUserRole(String userId) async {
+    final storage = await _openDB();
+    final user = await _getUserFromDB(storage, userId);
+    UserModel updatedUser;
+    if (user.roleModel == RoleModel.customer) {
+      updatedUser = user.copyWithM(roleModel: RoleModel.performer);
+      await _putUptadedUsertoDB(storage, userId, updatedUser);
+    } else {
+      updatedUser = user.copyWithM(roleModel: RoleModel.customer);
+      await _putUptadedUsertoDB(storage, userId, updatedUser);
+    }
+    return updatedUser.toEntity();
+  }
+
+  @override
   Future<UserEntity?> checkUser(String email, String password) async {
     final storage = await _openDB();
     try {
@@ -48,7 +63,7 @@ class UserRepositoryImpl extends UserRepository {
     final storage = await _openDB();
     final user = await _getUserFromDB(storage, userId);
     await storage.close();
-    return user;
+    return user.toEntity();
   }
 
   @override
@@ -57,9 +72,9 @@ class UserRepositoryImpl extends UserRepository {
     final user = await _getUserFromDB(storage, userId);
 
     final customerList = user.customerList..add(order.toModel());
-    final uptadedUser = user.copyWithM(customerList: customerList);
 
-    await _putUptadedUsertoDB(storage, userId, uptadedUser);
+    await _putUptadedUsertoDB(
+        storage, userId, user.copyWithM(customerList: customerList));
   }
 
   @override
@@ -69,9 +84,12 @@ class UserRepositoryImpl extends UserRepository {
     final user = await _getUserFromDB(storage, userId);
     final customerList = user.customerList
       ..removeWhere((order) => order.id == orderId);
-    final uptadedUser = user.copyWithM(customerList: customerList);
 
-    await _putUptadedUsertoDB(storage, userId, uptadedUser);
+    await _putUptadedUsertoDB(
+      storage,
+      userId,
+      user.copyWithM(customerList: customerList),
+    );
   }
 
   @override

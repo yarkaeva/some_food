@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
+import 'package:some_food/feature/presentation/blocs/cubits/user_role.dart';
 import 'package:some_food/feature/presentation/blocs/main_screen/main_screen_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -64,7 +65,17 @@ class _UserRoleWidget extends StatelessWidget {
         ToggleButtons(
           isSelected:
               user.role == Role.customer ? [true, false] : [false, true],
-          onPressed: (index) {},
+          onPressed: (index) {
+            final userRoleCubit = context.read<UserRoleCubit>();
+            final mainScreenBloc = context.read<MainScreenBloc>();
+            if (index == 0) {
+              userRoleCubit.becomeCustomer();
+              mainScreenBloc.add(UserIsCustomerPressed(id: user.id));
+            } else if (index == 1) {
+              userRoleCubit.becomePerformer();
+              mainScreenBloc.add(UserIsPerformerPressed(id: user.id));
+            }
+          },
           children: const [
             Text('ЗАКАЗЫВАЮ'),
             Text(

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/feature/presentation/auth/pages/auth_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/login_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/register_page.dart';
@@ -23,9 +24,9 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/main_screen',
       builder: (context, state) {
-        final id = state.extra as String;
+        final userId = state.extra as String;
         return MainScreenPage(
-          id: id,
+          userId: userId,
         );
       },
     ),

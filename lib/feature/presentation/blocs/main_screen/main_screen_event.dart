@@ -43,3 +43,11 @@ class ProfilePressed extends MainScreenEvent {
 class DeleteProfilePressed extends MainScreenEvent {
   const DeleteProfilePressed({required super.id});
 }
+
+class UserIsCustomerPressed extends MainScreenEvent {
+  const UserIsCustomerPressed({required super.id});
+}
+
+class UserIsPerformerPressed extends MainScreenEvent {
+  const UserIsPerformerPressed({required super.id});
+}
