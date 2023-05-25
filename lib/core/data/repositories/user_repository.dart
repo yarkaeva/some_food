@@ -1,7 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/core/data/models/user_model.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
-import 'package:some_food/core/domain/entity/order.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/core/domain/repositories/user_repository.dart';
 
@@ -27,11 +26,10 @@ class UserRepositoryImpl extends UserRepository {
     UserModel updatedUser;
     if (user.roleModel == RoleModel.customer) {
       updatedUser = user.copyWithM(roleModel: RoleModel.performer);
-      await _putUptadedUsertoDB(storage, userId, updatedUser);
     } else {
       updatedUser = user.copyWithM(roleModel: RoleModel.customer);
-      await _putUptadedUsertoDB(storage, userId, updatedUser);
     }
+    await _putUptadedUsertoDB(storage, userId, updatedUser);
     return updatedUser.toEntity();
   }
 
@@ -67,11 +65,11 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<void> addOrderToCustomerList(String userId, OrderEntity order) async {
+  Future<void> addOrderToCustomerList(String userId, String orderId) async {
     final storage = await _openDB();
     final user = await _getUserFromDB(storage, userId);
 
-    final customerList = user.customerList..add(order.toModel());
+    final customerList = user.customerList..add(orderId);
 
     await _putUptadedUsertoDB(
         storage, userId, user.copyWithM(customerList: customerList));
@@ -82,14 +80,35 @@ class UserRepositoryImpl extends UserRepository {
       String userId, String orderId) async {
     final storage = await _openDB();
     final user = await _getUserFromDB(storage, userId);
-    final customerList = user.customerList
-      ..removeWhere((order) => order.id == orderId);
+    final customerList = user.customerList..removeWhere((id) => id == orderId);
 
     await _putUptadedUsertoDB(
       storage,
       userId,
       user.copyWithM(customerList: customerList),
     );
+  }
+
+  @override
+  Future<void> addOrderToPerformerList(String userId, String orderId) async {
+    final storage = await _openDB();
+    final user = await _getUserFromDB(storage, userId);
+
+    final performerList = user.perfomerList..add(orderId);
+
+    await _putUptadedUsertoDB(
+        storage, userId, user.copyWithM(perfomerList: performerList));
+  }
+
+  @override
+  Future<void> deleteOrderFromPerformerList(
+      String userId, String orderId) async {
+    final storage = await _openDB();
+    final user = await _getUserFromDB(storage, userId);
+    final performerList = user.perfomerList..removeWhere((id) => id == orderId);
+
+    await _putUptadedUsertoDB(
+        storage, userId, user.copyWithM(perfomerList: performerList));
   }
 
   @override
@@ -111,26 +130,26 @@ class UserRepositoryImpl extends UserRepository {
     await _putUptadedUsertoDB(storage, userId, uptadedUser);
     return uptadedUser;
   }
+}
 
-  Future<Box<UserModel>> _openDB() async {
-    final storage = await Hive.openBox<UserModel>('users');
-    return storage;
-  }
+Future<Box<UserModel>> _openDB() async {
+  final storage = await Hive.openBox<UserModel>('users');
+  return storage;
+}
 
-  Future<UserModel> _getUserFromDB(
-    Box<UserModel> storage,
-    String userId,
-  ) async {
-    final user = storage.values.firstWhere((element) => element.id == userId);
-    return user;
-  }
+Future<UserModel> _getUserFromDB(
+  Box<UserModel> storage,
+  String userId,
+) async {
+  final user = storage.values.firstWhere((element) => element.id == userId);
+  return user;
+}
 
-  Future<void> _putUptadedUsertoDB(
-    Box<UserModel> storage,
-    String userId,
-    UserModel uptadedUser,
-  ) async {
-    await storage.put(userId, uptadedUser);
-    await storage.close();
-  }
+Future<void> _putUptadedUsertoDB(
+  Box<UserModel> storage,
+  String userId,
+  UserModel uptadedUser,
+) async {
+  await storage.put(userId, uptadedUser);
+  await storage.close();
 }

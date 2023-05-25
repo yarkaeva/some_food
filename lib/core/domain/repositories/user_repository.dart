@@ -25,8 +25,14 @@ abstract class UserRepository {
   Future<UserEntity> toggleFavorite(String userId, DishEntity dishItem);
 
   ///Adding item to customer list.
-  Future<void> addOrderToCustomerList(String userId, OrderEntity order);
+  Future<void> addOrderToCustomerList(String userId, String orderId);
 
   ///Delete item to customer list.
   Future<void> deleteOrderFromCustomerList(String userId, String orderId);
+
+  ///Adding item to performer list.
+  Future<void> addOrderToPerformerList(String userId, String orderId);
+
+  ///Delete item to performer list.
+  Future<void> deleteOrderFromPerformerList(String userId, String orderId);
 }
