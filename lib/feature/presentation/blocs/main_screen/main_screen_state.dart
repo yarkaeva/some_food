@@ -14,7 +14,7 @@ class Loadig extends MainScreenState {}
 class HomeSelected extends MainScreenState {
   const HomeSelected({required this.user, required this.list});
   final UserEntity user;
-  final List<dynamic> list;
+  final List<DishEntity> list;
 
   @override
   List<Object> get props => [user, list];
