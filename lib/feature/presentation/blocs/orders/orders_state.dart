@@ -14,6 +14,7 @@ class OrdersLoading extends OrderState {}
 class OrdersLoaded extends OrderState {
   final List<OrderEntity> orders;
   const OrdersLoaded(this.orders);
+
   @override
   List<Object> get props => [orders];
 }
