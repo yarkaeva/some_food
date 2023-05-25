@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
-import 'package:some_food/feature/presentation/widgets/cart_food_list_item.dart';
+import 'package:some_food/feature/presentation/widgets/performer_orders_list_item.dart';
 
-class CartFoodList extends StatelessWidget {
-  const CartFoodList({
-    super.key,
-    required this.userId,
-  });
+class PerformerOrdersList extends StatelessWidget {
+  const PerformerOrdersList({super.key, required this.userId});
   final String userId;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrdersBloc, OrderState>(
@@ -32,14 +30,14 @@ class CartFoodList extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    CartFoodListItem(
+                    PerformerOrdersListItem(
                       userId: userId,
                       orderItem: state.orders[index],
                     ),
                   ],
                 );
               } else {
-                return CartFoodListItem(
+                return PerformerOrdersListItem(
                   userId: userId,
                   orderItem: state.orders[index],
                 );

@@ -4,8 +4,8 @@ import 'package:some_food/core/domain/entity/order.dart';
 import 'package:some_food/core/theme.dart';
 import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 
-class CartFoodListItem extends StatelessWidget {
-  const CartFoodListItem({
+class CustomerOrdersListItem extends StatelessWidget {
+  const CustomerOrdersListItem({
     super.key,
     required this.orderItem,
     required this.userId,
@@ -25,13 +25,16 @@ class CartFoodListItem extends StatelessWidget {
           )),
       child: Column(
         children: [
-          _Header(orderItem: orderItem, userId: userId),
+          _TitleAndAmount(orderItem: orderItem, userId: userId),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _PriceAndTime(orderItem: orderItem),
               const SizedBox(width: 10),
-              const _OrderStatus(),
+              _OrderStatus(
+                  status: orderItem.status,
+                  orderId: orderItem.id,
+                  userId: userId),
             ],
           ),
         ],
@@ -40,8 +43,8 @@ class CartFoodListItem extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
+class _TitleAndAmount extends StatelessWidget {
+  const _TitleAndAmount({
     super.key,
     required this.orderItem,
     required this.userId,
@@ -166,7 +169,14 @@ class _PriceAndTime extends StatelessWidget {
 class _OrderStatus extends StatelessWidget {
   const _OrderStatus({
     super.key,
+    required this.status,
+    required this.orderId,
+    required this.userId,
   });
+
+  final OrderStatus status;
+  final String orderId;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -180,22 +190,90 @@ class _OrderStatus extends StatelessWidget {
           maxLines: 1,
         ),
         const SizedBox(height: 10),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(239, 171, 7, 1),
-              borderRadius: BorderRadius.circular(10)),
-          child: Text(
-            'Готовится',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Colors.white),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
+        Row(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+              decoration: BoxDecoration(
+                  color: status == OrderStatus.inProgress
+                      ? const Color.fromRGBO(239, 171, 7, 1)
+                      : Colors.grey,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                status == OrderStatus.placed
+                    ? 'Размещен'
+                    : status == OrderStatus.inProgress
+                        ? 'Готовится'
+                        : status == OrderStatus.done
+                            ? 'Готов'
+                            : 'Завершен',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(width: 10),
+            if (status == OrderStatus.done)
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      title: Text(
+                        'Вы получили заказ?',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: mainGreen),
+                      ),
+                      content:
+                          const Text('Нажмите да, если вы получили заказ.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            context.read<OrdersBloc>().add(
+                                OrderClosed(userId: userId, orderId: orderId));
+                          },
+                          child: const Text('Да'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Нет'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                  decoration: BoxDecoration(
+                      color: const Color.fromRGBO(239, 171, 7, 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    'Подтвердить',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+          ],
+        )
       ],
     );
   }

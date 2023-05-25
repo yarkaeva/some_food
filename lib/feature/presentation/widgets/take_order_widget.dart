@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/order.dart';
-import 'package:some_food/feature/presentation/blocs/cubits/amount_counter_cubit.dart';
-import 'package:some_food/feature/presentation/blocs/cubits/price_counter.dart';
 import 'package:some_food/feature/presentation/blocs/orders/orders_bloc.dart';
 
 class TakeOrderWidget extends StatelessWidget {
@@ -77,11 +75,21 @@ class TakeOrderWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  '${orderItem.price} руб.',
-                  style: Theme.of(context).textTheme.bodySmall,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  decoration: BoxDecoration(
+                      color: const Color.fromRGBO(68, 123, 114, 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    '${orderItem.price} руб.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
@@ -89,6 +97,9 @@ class TakeOrderWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
+                context
+                    .read<OrdersBloc>()
+                    .add(OrderTaked(orderId: orderItem.id, userId: userId));
               },
               child: const Text('ВЗЯТЬ ЗАКАЗ'),
             ),

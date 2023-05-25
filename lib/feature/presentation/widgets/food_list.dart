@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/feature/presentation/widgets/food_list_item.dart';
 
