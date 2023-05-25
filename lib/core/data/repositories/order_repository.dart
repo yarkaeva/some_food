@@ -5,11 +5,22 @@ import 'package:some_food/core/domain/repositories/order_repository.dart';
 
 class OrderRepositoryImpl extends OrderRepository {
   @override
-  Future<List<OrderEntity>> getOrders() async {
+  Future<List<OrderEntity>> getAllOrders() async {
     final storage = await Hive.openBox<OrderModel>('orders');
     final listOfOrders = storage.values.map((e) => e.toEntity()).toList();
     await storage.close();
     return listOfOrders;
+  }
+
+  @override
+  Future<List<OrderEntity>> getPlacedOrders() async {
+    final storage = await Hive.openBox<OrderModel>('orders');
+    final listPlacedOrders = storage.values
+        .where((element) => element.statusModel == OrderStatusModel.placed)
+        .map((e) => e.toEntity())
+        .toList();
+    await storage.close();
+    return listPlacedOrders;
   }
 
   @override

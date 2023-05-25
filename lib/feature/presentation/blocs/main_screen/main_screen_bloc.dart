@@ -61,12 +61,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   ) async {
     emit(Loadig());
     final user = await _userRepository.getUser(event.id);
-    var list = [];
-    if (user.role == Role.customer) {
-      list = _dishRepository.getDishesWithFavorite(user.favoriteList);
-    } else {
-      list = await _ordersRepository.getOrders();
-    }
+    final list = _dishRepository.getDishesWithFavorite(user.favoriteList);
 
     emit(HomeSelected(user: user, list: list));
   }
