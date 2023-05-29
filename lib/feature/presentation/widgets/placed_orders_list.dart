@@ -17,10 +17,32 @@ class PlacedOrdersList extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             itemCount: state.orders.length,
             itemBuilder: (context, index) {
-              return PlacedOrdersListItem(
-                userId: userId,
-                orderItem: state.orders[index],
-              );
+              if (index == 0) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'РАЗМЕЩЕННЫЕ ЗАКАЗЫ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontSize: 15),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    PlacedOrdersListItem(
+                      userId: userId,
+                      orderItem: state.orders[index],
+                    ),
+                  ],
+                );
+              } else {
+                return PlacedOrdersListItem(
+                  userId: userId,
+                  orderItem: state.orders[index],
+                );
+              }
             },
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(

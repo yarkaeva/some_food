@@ -20,7 +20,3 @@ class OrdersLoaded extends OrderState {
 }
 
 class LoadError extends OrderState {}
-// class OrdersUpdated extends OrderState {
-//   final List<OrderEntity> orders;
-//   const OrdersUpdated(this.orders);
-// }

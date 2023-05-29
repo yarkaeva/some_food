@@ -57,7 +57,6 @@ class OrderRepositoryImpl extends OrderRepository {
         order = order.copyWith(statusModel: OrderStatusModel.closed);
         break;
     }
-
     await storage.put(order.id, order);
     await storage.close();
     return order.toEntity();

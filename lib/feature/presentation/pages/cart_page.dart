@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/user.dart';
+import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/blocs/cubits/user_role.dart';
 import 'package:some_food/feature/presentation/widgets/customer_orders_list.dart';
 import 'package:some_food/feature/presentation/widgets/performer_orders_list.dart';
@@ -19,7 +20,7 @@ class CartPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<AuthCubit>().logout(),
             icon: const Icon(
               Icons.logout_outlined,
             ),

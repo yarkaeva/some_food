@@ -21,7 +21,7 @@ class PerformerOrdersList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'АКТИВНЫЕ ЗАКАЗЫ',
+                      'ВЫПОЛНЯЕМЫЕ ЗАКАЗЫ',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium

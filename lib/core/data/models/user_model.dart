@@ -1,7 +1,6 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
 import 'package:some_food/core/data/models/dish_model.dart';
-import 'package:some_food/core/data/models/order_model.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:hive_flutter/adapters.dart';
 

@@ -21,7 +21,9 @@ class PerformerOrdersListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(23),
           border: Border.all(
             width: 2,
-            color: const Color.fromRGBO(68, 123, 114, 1),
+            color: orderItem.status != OrderStatus.closed
+                ? const Color.fromRGBO(68, 123, 114, 1)
+                : Colors.grey,
           )),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +41,6 @@ class PerformerOrdersListItem extends StatelessWidget {
 
 class _TitleAndAmount extends StatelessWidget {
   const _TitleAndAmount({
-    super.key,
     required this.orderItem,
     required this.userId,
   });
@@ -52,69 +53,76 @@ class _TitleAndAmount extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          orderItem.dish.title,
-          style: Theme.of(context).textTheme.bodyMedium,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(68, 123, 114, 1),
-              borderRadius: BorderRadius.circular(10)),
-          child: Text(
-            'x ${orderItem.amount}',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.white),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                title: Text(
-                  'Отменить выполнение заказ?',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: mainGreen),
-                ),
-                content: const Text(
-                    'Вы уверены, что хотите отказаться от выполнения заказа? Данное действие будет нельзя отменить.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      context.read<OrdersBloc>().add(
-                            OrderRefused(userId: userId, orderId: orderItem.id),
-                          );
-                    },
-                    child: const Text('Да'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Нет'),
-                  ),
-                ],
+        Row(
+          children: [
+            Text(
+              orderItem.dish.title,
+              style: Theme.of(context).textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+              decoration: BoxDecoration(
+                  color: const Color.fromRGBO(68, 123, 114, 1),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                'x ${orderItem.amount}',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
-            );
-          },
-          icon: const Icon(
-            Icons.cancel,
-            color: Color.fromRGBO(211, 123, 123, 1),
-          ),
+            ),
+          ],
         ),
+        if (orderItem.status != OrderStatus.closed)
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: Text(
+                    'Отменить выполнение заказ?',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: mainGreen),
+                  ),
+                  content: const Text(
+                      'Вы уверены, что хотите отказаться от выполнения заказа? Данное действие будет нельзя отменить.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        context.read<OrdersBloc>().add(
+                              OrderRefused(
+                                  userId: userId, orderId: orderItem.id),
+                            );
+                      },
+                      child: const Text('Да'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Нет'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.cancel,
+              color: Color.fromRGBO(211, 123, 123, 1),
+            ),
+          ),
       ],
     );
   }
@@ -122,7 +130,6 @@ class _TitleAndAmount extends StatelessWidget {
 
 class _OrderStatus extends StatelessWidget {
   const _OrderStatus({
-    super.key,
     required this.status,
   });
 
@@ -158,7 +165,6 @@ class _OrderStatus extends StatelessWidget {
 
 class _OrderActions extends StatelessWidget {
   const _OrderActions({
-    super.key,
     required this.orderId,
     required this.userId,
     required this.status,

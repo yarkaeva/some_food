@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:some_food/core/data/repositories/dish_repository.dart';
-import 'package:some_food/core/data/repositories/order_repository.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/blocs/cubits/user_role.dart';
@@ -26,7 +25,6 @@ class MainScreenPage extends StatelessWidget {
           create: (context) => MainScreenBloc(
             userRepository: userRepo,
             dishRepository: DishRepositoryImpl(),
-            ordersRepository: OrderRepositoryImpl(),
           )..add(HomePressed(id: userId)),
         ),
         BlocProvider(

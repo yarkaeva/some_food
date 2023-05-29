@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:some_food/core/data/models/user_model.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
@@ -20,32 +21,33 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
+  Future<UserEntity> getUser(String userId) async {
+    await _openDB();
+    final user = await _getUserFromDB(userId);
+    return user.toEntity();
+  }
+
+  @override
   Future<UserEntity> toogleUserRole(String userId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
+    final user = await _getUserFromDB(userId);
     UserModel updatedUser;
     if (user.roleModel == RoleModel.customer) {
       updatedUser = user.copyWithM(roleModel: RoleModel.performer);
     } else {
       updatedUser = user.copyWithM(roleModel: RoleModel.customer);
     }
-    await _putUptadedUsertoDB(storage, userId, updatedUser);
+    await _putUpdatedUsertoDB(updatedUser);
     return updatedUser.toEntity();
   }
 
   @override
   Future<UserEntity?> checkUser(String email, String password) async {
     final storage = await _openDB();
-    try {
-      final logedUser = storage.values
-          .firstWhere((e) => e.email == email && e.password == password)
-          .toEntity();
-      await storage.close();
-      return logedUser;
-    } catch (e) {
-      await storage.close();
-      return null;
-    }
+    final logedUser = storage.values.firstWhereOrNull(
+      (e) => e.email == email && e.password == password,
+    );
+    await storage.close();
+    return logedUser?.toEntity();
   }
 
   @override
@@ -57,78 +59,64 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<UserEntity> getUser(String userId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
-    await storage.close();
-    return user.toEntity();
-  }
-
-  @override
   Future<void> addOrderToCustomerList(String userId, String orderId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
-
-    final customerList = user.customerList..add(orderId);
-
-    await _putUptadedUsertoDB(
-        storage, userId, user.copyWithM(customerList: customerList));
+    final user = await _getUserFromDB(userId);
+    await _putUpdatedUsertoDB(
+      user.copyWithM(
+        customerList: user.customerList..add(orderId),
+      ),
+    );
   }
 
   @override
   Future<void> deleteOrderFromCustomerList(
       String userId, String orderId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
-    final customerList = user.customerList..removeWhere((id) => id == orderId);
-
-    await _putUptadedUsertoDB(
-      storage,
-      userId,
-      user.copyWithM(customerList: customerList),
+    final user = await _getUserFromDB(userId);
+    await _putUpdatedUsertoDB(
+      user.copyWithM(
+        customerList: user.customerList..removeWhere((id) => id == orderId),
+      ),
     );
   }
 
   @override
   Future<void> addOrderToPerformerList(String userId, String orderId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
-
-    final performerList = user.perfomerList..add(orderId);
-
-    await _putUptadedUsertoDB(
-        storage, userId, user.copyWithM(perfomerList: performerList));
+    final user = await _getUserFromDB(userId);
+    await _putUpdatedUsertoDB(
+      user.copyWithM(
+        perfomerList: user.perfomerList..add(orderId),
+      ),
+    );
   }
 
   @override
   Future<void> deleteOrderFromPerformerList(
       String userId, String orderId) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
-    final performerList = user.perfomerList..removeWhere((id) => id == orderId);
-
-    await _putUptadedUsertoDB(
-        storage, userId, user.copyWithM(perfomerList: performerList));
+    final user = await _getUserFromDB(userId);
+    await _putUpdatedUsertoDB(
+      user.copyWithM(
+        perfomerList: user.perfomerList..removeWhere((id) => id == orderId),
+      ),
+    );
   }
 
   @override
   Future<UserEntity> toggleFavorite(String userId, DishEntity dishItem) async {
-    final storage = await _openDB();
-    final user = await _getUserFromDB(storage, userId);
+    final user = await _getUserFromDB(userId);
     final favoriteList = user.favoriteList;
-    final isExist = favoriteList.any((element) => element.id == dishItem.id);
-    final dishModel =
-        dishItem.copyWith(isFavorite: !dishItem.isFavorite).toModel();
+    final isFavorite = favoriteList.any((element) => element.id == dishItem.id);
 
-    if (isExist) {
+    if (isFavorite) {
       favoriteList.removeWhere((element) => element.id == dishItem.id);
     } else {
-      favoriteList.add(dishModel);
+      favoriteList.add(
+        dishItem.copyWith(isFavorite: !dishItem.isFavorite).toModel(),
+      );
     }
-    final uptadedUser = user.copyWithM(favoriteList: favoriteList);
+    final updatedUser = user.copyWithM(favoriteList: favoriteList);
+    await _putUpdatedUsertoDB(updatedUser);
 
-    await _putUptadedUsertoDB(storage, userId, uptadedUser);
-    return uptadedUser;
+    return updatedUser;
   }
 }
 
@@ -138,18 +126,17 @@ Future<Box<UserModel>> _openDB() async {
 }
 
 Future<UserModel> _getUserFromDB(
-  Box<UserModel> storage,
   String userId,
 ) async {
+  final storage = await Hive.openBox<UserModel>('users');
   final user = storage.values.firstWhere((element) => element.id == userId);
   return user;
 }
 
-Future<void> _putUptadedUsertoDB(
-  Box<UserModel> storage,
-  String userId,
-  UserModel uptadedUser,
+Future<void> _putUpdatedUsertoDB(
+  UserModel updatedUser,
 ) async {
-  await storage.put(userId, uptadedUser);
+  final storage = await _openDB();
+  await storage.put(updatedUser.id, updatedUser);
   await storage.close();
 }
