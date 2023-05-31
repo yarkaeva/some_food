@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/core/domain/repositories/dish_repository.dart';
-import 'package:some_food/core/domain/repositories/order_repository.dart';
 import 'package:some_food/core/domain/repositories/user_repository.dart';
 
 part 'main_screen_event.dart';
@@ -14,10 +13,8 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   MainScreenBloc({
     required UserRepository userRepository,
     required DishRepository dishRepository,
-    required OrderRepository ordersRepository,
   })  : _userRepository = userRepository,
         _dishRepository = dishRepository,
-        _ordersRepository = ordersRepository,
         super(MainScreenInitial()) {
     on<HomePressed>(_onHomePressed);
     on<FavoritePressed>(_onFavoritePressed);
@@ -31,7 +28,6 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   }
   final UserRepository _userRepository;
   final DishRepository _dishRepository;
-  final OrderRepository _ordersRepository;
 
   Future<void> _onUserIsCustomerPressed(
     UserIsCustomerPressed event,
@@ -99,10 +95,9 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
     FavoriteStatusToggledOnHome event,
     Emitter<MainScreenState> emit,
   ) async {
-    final dish = event.dishItem;
     final user = await _userRepository.toggleFavorite(
       event.id,
-      dish.toModel(),
+      event.dishItem.toModel(),
     );
     final uptadedList =
         _dishRepository.getDishesWithFavorite(user.favoriteList);
@@ -113,10 +108,9 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
     FavoriteStatusToggledOnFavorite event,
     Emitter<MainScreenState> emit,
   ) async {
-    final dish = event.dishItem;
     final user = await _userRepository.toggleFavorite(
       event.id,
-      dish.toModel(),
+      event.dishItem.toModel(),
     );
 
     emit(FavoriteSelected(

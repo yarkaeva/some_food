@@ -14,21 +14,60 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
   })  : _ordersRepository = ordersRepo,
         _userRepository = userRepo,
         super(OrderInitial()) {
-    on<FirstLoad>(_onFirstLoad);
+    on<CustomerOrdersLoad>(_onCustomerOrdersLoad);
     on<OrderAdded>(_onOrderAdded);
     on<OrderDeleted>(_onOrderDeleted);
-    on<OrderSatusUpdated>(_onOrderUpdated);
+    on<PlacedOrdersLoad>(_onPlacedOrderLoad);
+    on<PerformerOrdersLoad>(_onPerformerOrdersLoad);
+    on<OrderTaked>(_onOrderTaked);
+    on<OrderRefused>(_onOrderRefused);
+    on<OrderFinished>(_onOrderFinished);
+    on<OrderClosed>(_onOrderClosed);
   }
   final OrderRepository _ordersRepository;
   final UserRepository _userRepository;
 
-  Future<void> _onFirstLoad(
-    FirstLoad event,
+  Future<void> _onPlacedOrderLoad(
+    PlacedOrdersLoad event,
     Emitter<OrderState> emit,
   ) async {
     try {
       emit(OrdersLoading());
-      await _ordersListUpdated(emit);
+      final placedOrders = await _ordersRepository.getPlacedOrders();
+      emit(OrdersLoaded(placedOrders));
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+
+  Future<void> _onCustomerOrdersLoad(
+    CustomerOrdersLoad event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      emit(OrdersLoading());
+      final user = await _userRepository.getUser(event.userId);
+      final ordersId = user.customerList;
+      final allOrders = await _ordersRepository.getAllOrders();
+      final customerOrders = _generaterOrdersList(ordersId, allOrders).toList();
+      emit(OrdersLoaded(customerOrders));
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+
+  Future<void> _onPerformerOrdersLoad(
+    PerformerOrdersLoad event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      emit(OrdersLoading());
+      final user = await _userRepository.getUser(event.userId);
+      final ordersId = user.perfomerList;
+      final allOrders = await _ordersRepository.getAllOrders();
+      final performerOrders =
+          _generaterOrdersList(ordersId, allOrders).toList();
+      emit(OrdersLoaded(performerOrders));
     } catch (_) {
       emit(LoadError());
     }
@@ -41,8 +80,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
     try {
       emit(OrdersLoading());
       await _ordersRepository.placeOrder(event.order);
-      await _userRepository.addOrderToCustomerList(event.userId, event.order);
-      await _ordersListUpdated(emit);
+      await _userRepository.addOrderToCustomerList(
+          event.userId, event.order.id);
     } catch (_) {
       emit(LoadError());
     }
@@ -56,27 +95,99 @@ class OrdersBloc extends Bloc<OrdersEvent, OrderState> {
       await _userRepository.deleteOrderFromCustomerList(
           event.userId, event.orderId);
       await _ordersRepository.deleteOrder(event.orderId);
-      await _ordersListUpdated(emit);
     } catch (_) {
       emit(LoadError());
     }
   }
 
-  Future<void> _onOrderUpdated(
-    OrderSatusUpdated event,
+  Future<void> _onOrderTaked(
+    OrderTaked event,
     Emitter<OrderState> emit,
   ) async {
     try {
       emit(OrdersLoading());
-      //TODO: implement updating an order status.
-      await _ordersListUpdated(emit);
+
+      await _ordersRepository.updateOrderStatus(
+          event.orderId, OrderStatus.inProgress);
+      await _userRepository.addOrderToPerformerList(
+          event.userId, event.orderId);
+
+      final placedOrders = await _ordersRepository.getPlacedOrders();
+      emit(OrdersLoaded(placedOrders));
     } catch (_) {
       emit(LoadError());
     }
   }
 
-  Future<void> _ordersListUpdated(Emitter<OrderState> emit) async {
-    final orders = await _ordersRepository.getOrders();
-    emit(OrdersLoaded(orders));
+  Future<void> _onOrderRefused(
+    OrderRefused event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      await _userRepository.deleteOrderFromPerformerList(
+          event.userId, event.orderId);
+      await _ordersRepository.updateOrderStatus(
+          event.orderId, OrderStatus.placed);
+
+      final user = await _userRepository.getUser(event.userId);
+      final ordersId = user.perfomerList;
+      final allOrders = await _ordersRepository.getAllOrders();
+      final performerOrders =
+          _generaterOrdersList(ordersId, allOrders).toList();
+
+      emit(OrdersLoaded(performerOrders));
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+
+  Future<void> _onOrderFinished(
+    OrderFinished event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      emit(OrdersLoading());
+      await _ordersRepository.updateOrderStatus(
+          event.orderId, OrderStatus.done);
+
+      final user = await _userRepository.getUser(event.userId);
+      final ordersId = user.perfomerList;
+      final allOrders = await _ordersRepository.getAllOrders();
+      final performerOrders =
+          _generaterOrdersList(ordersId, allOrders).toList();
+
+      emit(OrdersLoaded(performerOrders));
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+
+  Future<void> _onOrderClosed(
+    OrderClosed event,
+    Emitter<OrderState> emit,
+  ) async {
+    try {
+      emit(OrdersLoading());
+      await _ordersRepository.updateOrderStatus(
+          event.orderId, OrderStatus.closed);
+
+      final user = await _userRepository.getUser(event.userId);
+      final ordersId = user.perfomerList;
+      final allOrders = await _ordersRepository.getAllOrders();
+      final performerOrders =
+          _generaterOrdersList(ordersId, allOrders).toList();
+
+      emit(OrdersLoaded(performerOrders));
+    } catch (_) {
+      emit(LoadError());
+    }
+  }
+}
+
+Iterable<OrderEntity> _generaterOrdersList(
+    List<String> ordersId, List<OrderEntity> orders) sync* {
+  for (var id in ordersId) {
+    var order = orders.firstWhere((element) => element.id == id);
+    yield order;
   }
 }

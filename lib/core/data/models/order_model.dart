@@ -71,4 +71,21 @@ class OrderModel extends OrderEntity {
       amount: amount,
       status: statusModel.statusEnum,
       id: id);
+
+  OrderModel copyWith({
+    DishModel? dish,
+    int? price,
+    int? cookingTime,
+    int? amount,
+    OrderStatusModel? statusModel,
+    String? id,
+    String? customerId,
+  }) =>
+      OrderModel(
+          dish: dish ?? this.dish,
+          price: price ?? this.price,
+          cookingTime: cookingTime ?? this.cookingTime,
+          amount: amount ?? this.amount,
+          statusModel: statusModel ?? this.statusModel,
+          id: id ?? this.id);
 }

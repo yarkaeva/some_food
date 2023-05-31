@@ -23,8 +23,8 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       name: fields[6] as String,
       address: fields[7] as String,
       roleModel: fields[3] as RoleModel,
-      customerList: (fields[4] as List).cast<OrderModel>(),
-      perfomerList: (fields[5] as List).cast<OrderModel>(),
+      customerList: (fields[4] as List).cast<String>(),
+      perfomerList: (fields[5] as List).cast<String>(),
       favoriteList: (fields[8] as List).cast<DishModel>(),
     );
   }

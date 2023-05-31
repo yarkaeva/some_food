@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:some_food/core/data/models/user_model.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
-import 'package:some_food/core/domain/entity/order.dart';
 
 enum Role { customer, perfomer }
 
@@ -12,8 +11,8 @@ class UserEntity extends Equatable {
   final String name;
   final String address;
   final Role role;
-  final List<OrderEntity> customerList;
-  final List<OrderEntity> perfomerList;
+  final List<String> customerList;
+  final List<String> perfomerList;
   final List<DishEntity> favoriteList;
 
   const UserEntity({
@@ -34,8 +33,8 @@ class UserEntity extends Equatable {
     String? name,
     String? address,
     Role? role,
-    List<OrderEntity>? customerList,
-    List<OrderEntity>? perfomerList,
+    List<String>? customerList,
+    List<String>? perfomerList,
     List<DishEntity>? favoriteList,
   }) {
     return UserEntity(
@@ -59,8 +58,8 @@ class UserEntity extends Equatable {
         address: address,
         roleModel:
             role == Role.customer ? RoleModel.customer : RoleModel.performer,
-        customerList: customerList.map((e) => e.toModel()).toList(),
-        perfomerList: perfomerList.map((e) => e.toModel()).toList(),
+        customerList: customerList,
+        perfomerList: perfomerList,
         favoriteList: favoriteList.map((e) => e.toModel()).toList(),
       );
 

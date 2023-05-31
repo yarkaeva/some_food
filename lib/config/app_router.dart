@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:some_food/core/domain/entity/user.dart';
 import 'package:some_food/feature/presentation/auth/pages/auth_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/login_page.dart';
 import 'package:some_food/feature/presentation/auth/pages/register_page.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:some_food/core/data/repositories/dish_repository.dart';
-import 'package:some_food/core/data/repositories/order_repository.dart';
 import 'package:some_food/core/data/repositories/user_repository.dart';
 import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/blocs/cubits/user_role.dart';
@@ -26,7 +25,6 @@ class MainScreenPage extends StatelessWidget {
           create: (context) => MainScreenBloc(
             userRepository: userRepo,
             dishRepository: DishRepositoryImpl(),
-            ordersRepository: OrderRepositoryImpl(),
           )..add(HomePressed(id: userId)),
         ),
         BlocProvider(
@@ -53,8 +51,7 @@ class MainScreenPageWidget extends StatefulWidget {
 
 class _MainScreenPageWidgetState extends State<MainScreenPageWidget> {
   int _currentIndex = 0;
-
-  int _currentIndexPerformer = 2;
+  int _currentIndexPerformer = 0;
 
   void _onNavigationTapCustomer(int index) {
     final mainScreenBloc = context.read<MainScreenBloc>();
@@ -80,7 +77,7 @@ class _MainScreenPageWidgetState extends State<MainScreenPageWidget> {
         mainScreenBloc.add(
           CartPressed(id: widget.id),
         );
-        ordersBloc.add(FirstLoad());
+        ordersBloc.add(CustomerOrdersLoad(userId: widget.id));
         break;
       case 3:
         mainScreenBloc.add(
@@ -93,6 +90,7 @@ class _MainScreenPageWidgetState extends State<MainScreenPageWidget> {
 
   void _onNavigationTapPerformer(int index) {
     final mainScreenBloc = context.read<MainScreenBloc>();
+    final ordersBloc = context.read<OrdersBloc>();
 
     if (_currentIndexPerformer == index) return;
     setState(() {
@@ -104,11 +102,13 @@ class _MainScreenPageWidgetState extends State<MainScreenPageWidget> {
         mainScreenBloc.add(
           HomePressed(id: widget.id),
         );
+        ordersBloc.add(PlacedOrdersLoad(userId: widget.id));
         break;
       case 1:
         mainScreenBloc.add(
           CartPressed(id: widget.id),
         );
+        ordersBloc.add(PerformerOrdersLoad(userId: widget.id));
         break;
       case 2:
         mainScreenBloc.add(

@@ -172,6 +172,17 @@ class _ActionButtonsWidget extends StatelessWidget {
               ),
             );
           },
+          style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                foregroundColor: const MaterialStatePropertyAll(
+                  Color.fromRGBO(211, 123, 123, 1),
+                ),
+                side: const MaterialStatePropertyAll(
+                  BorderSide(
+                    color: Color.fromRGBO(211, 123, 123, 1),
+                    width: 2,
+                  ),
+                ),
+              ),
           child: const Text('УДАЛИТЬ ПРОФИЛЬ'),
         ),
       ],

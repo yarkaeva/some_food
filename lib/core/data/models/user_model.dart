@@ -1,7 +1,6 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
 import 'package:some_food/core/data/models/dish_model.dart';
-import 'package:some_food/core/data/models/order_model.dart';
 import 'package:some_food/core/domain/entity/user.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -26,9 +25,9 @@ class UserModel extends UserEntity {
   @HiveField(3)
   final RoleModel roleModel;
   @HiveField(4)
-  final List<OrderModel> customerList;
+  final List<String> customerList;
   @HiveField(5)
-  final List<OrderModel> perfomerList;
+  final List<String> perfomerList;
   @HiveField(6)
   final String name;
   @HiveField(7)
@@ -76,8 +75,8 @@ class UserModel extends UserEntity {
     String? name,
     String? address,
     RoleModel? roleModel,
-    List<OrderModel>? customerList,
-    List<OrderModel>? perfomerList,
+    List<String>? customerList,
+    List<String>? perfomerList,
     List<DishModel>? favoriteList,
   }) {
     return UserModel(

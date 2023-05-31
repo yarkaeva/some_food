@@ -38,8 +38,27 @@ class OrderRepositoryImpl extends OrderRepository {
   }
 
   @override
-  Future<void> updateOrderStatus(String id) {
-    // TODO: implement updateOrderStatus
-    throw UnimplementedError();
+  Future<OrderEntity> updateOrderStatus(
+      String orderId, OrderStatus status) async {
+    final storage = await Hive.openBox<OrderModel>('orders');
+    var order = storage.values.firstWhere((element) => element.id == orderId);
+
+    switch (status) {
+      case OrderStatus.placed:
+        order = order.copyWith(statusModel: OrderStatusModel.placed);
+        break;
+      case OrderStatus.inProgress:
+        order = order.copyWith(statusModel: OrderStatusModel.inProgress);
+        break;
+      case OrderStatus.done:
+        order = order.copyWith(statusModel: OrderStatusModel.done);
+        break;
+      case OrderStatus.closed:
+        order = order.copyWith(statusModel: OrderStatusModel.closed);
+        break;
+    }
+    await storage.put(order.id, order);
+    await storage.close();
+    return order.toEntity();
   }
 }

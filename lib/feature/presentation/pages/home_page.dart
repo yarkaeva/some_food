@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:some_food/core/domain/entity/dish.dart';
 import 'package:some_food/core/domain/entity/user.dart';
+import 'package:some_food/feature/presentation/auth/cubit/auth_cubit.dart';
 import 'package:some_food/feature/presentation/blocs/cubits/user_role.dart';
 import 'package:some_food/feature/presentation/widgets/food_list.dart';
 import 'package:some_food/feature/presentation/widgets/placed_orders_list.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.read<AuthCubit>().logout(),
             icon: const Icon(
               Icons.logout_outlined,
             ),
